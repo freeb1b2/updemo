@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>AI提示词反推工具</title>
-    <!-- 内联CSS -->
     <style>
         * {
             margin: 0;
@@ -16,7 +12,7 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             display: flex;
@@ -45,12 +41,6 @@
             font-size: 20px;
             font-weight: bold;
             color: #4F46E5;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo i {
-            margin-right: 8px;
         }
         
         .free-tag {
@@ -63,7 +53,7 @@
             padding: 32px 24px;
         }
         
-        .upload-section {
+        .upload-section, #result-area {
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -93,32 +83,24 @@
             border-color: #4F46E5;
         }
         
-        #upload-area i {
-            font-size: 32px;
+        #upload-content i {
+            font-size: 48px;
             color: #94a3b8;
             margin-bottom: 16px;
         }
         
-        #upload-area p {
+        #upload-content p {
             color: #64748b;
             margin-bottom: 8px;
-        }
-        
-        #upload-area p small {
-            color: #94a3b8;
         }
         
         #preview-container {
             display: none;
         }
         
-        .hidden {
-            display: none !important;
-        }
-        
         #image-preview {
             max-height: 256px;
-            object-contain: contain;
+            object-fit: contain;
             margin: 0 auto;
             border-radius: 8px;
         }
@@ -130,11 +112,6 @@
             background: none;
             border: none;
             cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        
-        #remove-image:hover {
-            color: #dc2626;
         }
         
         #generate-btn {
@@ -155,7 +132,6 @@
         
         #generate-btn:hover {
             background: #4338ca;
-            box-shadow: 0 6px 8px rgba(79, 70, 229, 0.4);
         }
         
         #generate-btn:disabled {
@@ -163,29 +139,11 @@
             cursor: not-allowed;
         }
         
-        #generate-btn i {
-            margin-right: 8px;
-        }
-        
-        #result-area {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 32px;
-            margin-bottom: 24px;
-            display: none;
-        }
-        
         #result-area h2 {
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 16px;
             color: #1E293B;
-        }
-        
-        .prompt-container {
-            position: relative;
-            margin-bottom: 16px;
         }
         
         #prompt-result {
@@ -198,26 +156,14 @@
             font-family: inherit;
         }
         
-        #prompt-result:focus {
-            outline: none;
-            border-color: #4F46E5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-        
         #copy-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: #f1f5f9;
+            margin-top: 16px;
+            background: #10b981;
+            color: white;
+            padding: 8px 24px;
             border: none;
             border-radius: 8px;
-            padding: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        #copy-btn:hover {
-            background: #e2e8f0;
         }
         
         #copy-success {
@@ -227,178 +173,96 @@
             display: none;
         }
         
-        #copy-success i {
-            margin-right: 4px;
-        }
-        
-        .usage-section {
-            margin-top: 24px;
-        }
-        
-        .usage-section h3 {
-            font-size: 14px;
-            font-weight: 500;
-            color: #64748b;
-            margin-bottom: 8px;
-        }
-        
-        .usage-section p {
-            font-size: 14px;
-            color: #64748b;
-        }
-        
         .info-box {
             background: #eff6ff;
             border-left: 4px solid #3b82f6;
             padding: 16px;
             border-radius: 8px;
-            margin-bottom: 24px;
-        }
-        
-        .info-box-content {
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .info-box-icon {
-            flex-shrink: 0;
-            color: #3b82f6;
-            margin-right: 12px;
-        }
-        
-        .info-box-text {
-            font-size: 14px;
-            color: #1e40af;
         }
         
         footer {
             background: white;
             box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
             padding: 16px 24px;
-        }
-        
-        .footer-content {
             text-align: center;
             font-size: 14px;
             color: #64748b;
         }
         
-        /* 响应式设计 */
-        @media (max-width: 480px) {
-            header {
-                padding: 12px 16px;
-            }
-            
-            main {
-                padding: 24px 16px;
-            }
-            
-            .upload-section,
-            #result-area {
-                padding: 24px;
-            }
-            
-            #upload-area {
-                padding: 24px;
-            }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- 头部 -->
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-magic"></i>
-                    AI提示词反推工具
-                </div>
-                <div class="free-tag">
-                    完全免费 • 无需登录
-                </div>
+                <div class="logo">AI提示词反推工具</div>
+                <div class="free-tag">完全免费 • 无需登录</div>
             </div>
         </div>
     </header>
 
-    <!-- 主内容 -->
     <main>
         <div class="container">
-            <!-- 上传区域 -->
             <div class="upload-section">
                 <h2 class="section-title">上传图片，获取AI提示词</h2>
                 
                 <div id="upload-area">
-                    <input type="file" id="image-upload" accept="image/*" class="hidden">
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
                     <div id="upload-content">
-                        <i class="fas fa-cloud-upload-alt"></i>
+                        <i class="fas fa-cloud-upload-alt">📷</i>
                         <p>点击或拖拽图片到此处</p>
-                        <p><small>支持 JPG、PNG、WebP 格式</small></p>
+                        <p style="font-size: 12px; color: #94a3b8;">支持 JPG、PNG、WebP 格式</p>
                     </div>
                     <div id="preview-container">
                         <img id="image-preview" alt="预览图片">
-                        <button id="remove-image">
-                            <i class="fas fa-times"></i> 移除图片
-                        </button>
+                        <button id="remove-image">移除图片</button>
                     </div>
                 </div>
 
                 <button id="generate-btn" disabled>
-                    <i class="fas fa-magic"></i>
                     生成提示词
                 </button>
             </div>
 
-            <!-- 结果区域 -->
-            <div id="result-area">
+            <div id="result-area" style="display: none;">
                 <h2>生成的提示词</h2>
-                <div class="prompt-container">
-                    <textarea id="prompt-result" readonly></textarea>
-                    <button id="copy-btn">
-                        <i class="fas fa-copy"></i>
-                    </button>
-                </div>
-                <div id="copy-success">
-                    <i class="fas fa-check-circle"></i> 已复制到剪贴板
-                </div>
-                <div class="usage-section">
-                    <h3>如何使用</h3>
-                    <p>
-                        将生成的提示词复制到您的AI绘画工具中，如Midjourney、DALL-E等，即可生成类似风格的图像。
-                    </p>
-                </div>
+                <textarea id="prompt-result" readonly></textarea>
+                <button id="copy-btn">复制提示词</button>
+                <div id="copy-success">✓ 已复制到剪贴板</div>
             </div>
 
-            <!-- 提示信息 -->
             <div class="info-box">
-                <div class="info-box-content">
-                    <div class="info-box-icon">
-                        <i class="fas fa-info-circle"></i>
-                    </div>
-                    <div class="info-box-text">
-                        <strong>提示：</strong> 本工具使用本地算法生成提示词，生成的提示词可能与原始提示词有所不同，但可以作为参考使用。
-                    </div>
-                </div>
+                <strong>提示：</strong> 本工具使用TensorFlow.js图像识别技术，根据图片内容智能生成提示词。
             </div>
         </div>
     </main>
 
-    <!-- 底部 -->
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <p>© 2026 AI提示词反推工具 | 完全免费使用</p>
-            </div>
+            © 2026 AI提示词反推工具 | 完全免费使用
         </div>
     </footer>
 
-    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+    
     <script>
-        // 全局变量
         let uploadedImage = null;
+        let mobilenetModel = null;
 
-        // 元素引用
         const uploadArea = document.getElementById('upload-area');
         const imageUpload = document.getElementById('image-upload');
         const uploadContent = document.getElementById('upload-content');
@@ -411,37 +275,25 @@
         const copyBtn = document.getElementById('copy-btn');
         const copySuccess = document.getElementById('copy-success');
 
-        // 上传区域点击事件
-        uploadArea.addEventListener('click', () => {
-            imageUpload.click();
-        });
-
-        // 拖拽事件
+        uploadArea.addEventListener('click', () => imageUpload.click());
+        
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadArea.classList.add('border-primary');
         });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('border-primary');
-        });
-
+        
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
-            uploadArea.classList.remove('border-primary');
             if (e.dataTransfer.files.length > 0) {
                 handleFile(e.dataTransfer.files[0]);
             }
         });
 
-        // 文件选择事件
         imageUpload.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
                 handleFile(e.target.files[0]);
             }
         });
 
-        // 处理文件
         function handleFile(file) {
             if (!file.type.startsWith('image/')) {
                 alert('请上传图片文件！');
@@ -459,7 +311,6 @@
             reader.readAsDataURL(file);
         }
 
-        // 移除图片
         removeImage.addEventListener('click', () => {
             uploadedImage = null;
             imageUpload.value = '';
@@ -469,91 +320,96 @@
             resultArea.style.display = 'none';
         });
 
-        // 生成提示词
+        async function initModel() {
+            if (!mobilenetModel) {
+                generateBtn.innerHTML = '<span class="loading"></span> 加载AI模型...';
+                generateBtn.disabled = true;
+                try {
+                    mobilenetModel = await mobilenet.load();
+                } catch (error) {
+                    console.error('模型加载失败:', error);
+                    alert('AI模型加载失败，请刷新页面重试');
+                    generateBtn.innerHTML = '生成提示词';
+                    return null;
+                }
+            }
+            return mobilenetModel;
+        }
+
         generateBtn.addEventListener('click', async () => {
             if (!uploadedImage) return;
 
-            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 生成中...';
+            generateBtn.innerHTML = '<span class="loading"></span> 生成中...';
             generateBtn.disabled = true;
 
             try {
-                // 简单的提示词生成逻辑，基于图片类型和随机选择
-                const prompt = generatePromptFromImageType(uploadedImage.type);
+                const model = await initModel();
+                if (!model) {
+                    throw new Error('模型加载失败');
+                }
+
+                const img = new Image();
+                img.src = imagePreview.src;
+                await new Promise((resolve) => {
+                    img.onload = resolve;
+                });
+
+                const predictions = await model.classify(img);
+                
+                const keywords = predictions
+                    .slice(0, 5)
+                    .map(p => p.className.split(',')[0].toLowerCase().trim());
+                
+                const prompt = generatePromptFromKeywords(keywords);
                 promptResult.value = prompt;
                 resultArea.style.display = 'block';
 
             } catch (error) {
                 console.error('错误:', error);
-                // 备用方案：使用默认提示词
-                const defaultPrompt = 'a beautiful image, high quality, detailed, realistic, professional, 4k, trending on artstation, cinematic lighting, perfect composition, sharp focus, vibrant colors';
-                promptResult.value = defaultPrompt;
-                resultArea.style.display = 'block';
+                alert('生成提示词时出错，请稍后重试');
             } finally {
-                generateBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> 生成提示词';
+                generateBtn.innerHTML = '生成提示词';
                 generateBtn.disabled = false;
             }
         });
 
-        // 根据图片类型生成提示词
-        function generatePromptFromImageType(imageType) {
-            // 基础描述词列表
-            const descriptions = [
-                'a beautiful scene',
-                'a stunning view',
-                'an amazing landscape',
-                'a fantastic portrait',
-                'a wonderful still life',
-                'an incredible abstract',
-                'a magnificent cityscape',
-                'a breathtaking nature scene'
+        function generatePromptFromKeywords(keywords) {
+            const enhancements = [
+                'high quality', 'detailed', '4k', 'professional',
+                'cinematic lighting', 'perfect composition', 'sharp focus',
+                'vibrant colors', 'trending on artstation'
             ];
             
-            // 风格词列表
-            const styles = [
-                'realistic',
-                'digital art',
-                'oil painting',
-                'watercolor',
-                'sketch',
-                'photorealistic',
-                'cinematic',
-                'surreal'
-            ];
+            const shuffled = enhancements.sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 4);
             
-            // 随机选择描述词和风格词
-            const randomDescription = descriptions[Math.floor(Math.random() * descriptions.length)];
-            const randomStyle = styles[Math.floor(Math.random() * styles.length)];
-            
-            // 根据图片类型调整提示词
-            let typeSpecific = '';
-            switch (imageType) {
-                case 'image/jpeg':
-                    typeSpecific = 'photograph, high resolution';
-                    break;
-                case 'image/png':
-                    typeSpecific = 'illustration, clean lines';
-                    break;
-                case 'image/webp':
-                    typeSpecific = 'modern digital image, optimized';
-                    break;
-                default:
-                    typeSpecific = 'image, high quality';
-            }
-            
-            // 生成完整提示词
-            return `${randomDescription}, ${typeSpecific}, ${randomStyle}, detailed, high quality, 4k, professional, trending on artstation, cinematic lighting, perfect composition, sharp focus, vibrant colors`;
+            return `${keywords.join(', ')}, ${selected.join(', ')}`;
         }
 
-        // 复制功能
         copyBtn.addEventListener('click', () => {
             promptResult.select();
             document.execCommand('copy');
             
-            copySuccess.classList.remove('hidden');
+            copySuccess.style.display = 'block';
             setTimeout(() => {
-                copySuccess.classList.add('hidden');
+                copySuccess.style.display = 'none';
             }, 2000);
         });
+
+        initModel();
+
+        // 注册Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
